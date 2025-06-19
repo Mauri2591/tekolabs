@@ -1,0 +1,70 @@
+body {
+    background-color: #5c0074;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    background-image:
+        linear-gradient(rgba(92, 0, 116, 0.6), rgba(92, 0, 116, 0.6)),
+        url("../public/img/img_fondo_pantalla.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-blend-mode: overlay;
+}
+
+/* Base visual de consola */
+.terminal {
+    background-color: #000;
+    color: #46ff46;
+    padding: .5rem;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #46ff46;
+    overflow-y: auto;
+    border: 1px solid #46ff46;
+    margin-bottom: 1.2rem;
+    font-family: monospace;
+}
+
+/* Terminal de narrativa: baja */
+.terminal-narrativa {
+    height: 10rem;
+    background-color: #1f1f1f;
+    color: yellowgreen;
+    box-shadow: 0 0 10px yellowgreen;
+
+}
+
+/* Terminal de desafío: grande */
+.terminal-challenge {
+    min-height: 26rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-family: monospace;
+    font-weight: normal;
+    overflow-y: auto;
+}
+
+.prompt {
+    color: #33ff33;
+    font-weight: normal;
+    margin-bottom: 0.5rem;
+}
+
+.cursor {
+    display: inline-block;
+    width: 10px;
+    height: 1rem;
+    background-color: #33ff33;
+    margin-left: 5px;
+    animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+}

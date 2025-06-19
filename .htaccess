@@ -1,0 +1,22 @@
+<IfModule mod_rewrite.c>
+    Options -Indexes
+    RewriteEngine On
+
+    RewriteBase /tekoLabs/
+
+    #Evitar redirección dentro de /desafios/
+    RewriteCond %{REQUEST_URI} ^/tekoLabs/desafios/ [NC]
+    RewriteRule ^ - [L]
+
+    # Redirigir todo lo que no sea archivo o carpeta real a index.php
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
+</IfModule>
+
+#Fuera del bloque
+AddType application/javascript .js
+AddType audio/mpeg .mp3
+AddType image/webp .webp
+AddType image/png .png
+AddType image/jpeg .jpg .jpeg
