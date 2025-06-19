@@ -775,6 +775,8 @@ function validarRespuestaRceBasico() {
     }
 
     if (valor === SOLUCION_GLOBAL) {
+        clearInterval(intervalo);
+        localStorage.removeItem("expira_desafio");
         $.post("../controllers/ctrDesafios.php?case=update_estado_esafio", { id: ID_DESAFIO, id_estado: 1 }, function () {//antes id_estado=0
             Swal.fire({
                 title: 'Desafío resuelto',
@@ -852,6 +854,8 @@ function validarRespuestaIngresarValorCookie() {
     const valor = document.getElementById("inputSolucion").value.trim();
 
     if (valor === SOLUCION_GLOBAL || valor === 'ewogICJzZXNzaW9uSUQiOiAiMTIzNDUiLAogICJ1c2VybmFtZSI6ICJ0ZWxlY29tIiwKICAiaXNBZG1pbiI6IGZhbHNlCn0') {
+        clearInterval(intervalo);
+        localStorage.removeItem("expira_desafio");
         $.post("../controllers/ctrDesafios.php?case=update_estado_esafio", { id: ID_DESAFIO, id_estado: 1 }, function () {//antes id_estado=0
             Swal.fire({
                 title: 'Desafío resuelto',
@@ -927,6 +931,8 @@ function validarRespuestaValorCookieModificada() {
     const valor = document.getElementById("inputSolucion").value.trim();
 
     if (valor === SOLUCION_GLOBAL || valor === 'eyAgICJzZXNzaW9uSUQiOiAiMTIzNDUiLCAgICJ1c2VybmFtZSI6ICJ0ZWxlY29tIiwgICAiaXNBZG1pbiI6IHRydWUgfQ==' || valor == 'eyAgICJzZXNzaW9uSUQiOiAiMTIzNDUiLCAgICJ1c2VybmFtZSI6ICJ0ZWxlY29tIiwgICAiaXNBZG1pbiI6IHRydWUgfQ=' || valor == 'eyAgICJzZXNzaW9uSUQiOiAiMTIzNDUiLCAgICJ1c2VybmFtZSI6ICJ0ZWxlY29tIiwgICAiaXNBZG1pbiI6IHRydWUgfQ') {
+        clearInterval(intervalo);
+        localStorage.removeItem("expira_desafio");
         $.post("../controllers/ctrDesafios.php?case=update_estado_esafio", { id: ID_DESAFIO, id_estado: 1 }, function () {//antes id_estado=0
             Swal.fire({
                 title: 'Desafío resuelto',
@@ -1000,7 +1006,6 @@ function input_cod_enc() {
         textarea.value = "⚠️ Error: texto inválido para decodificar.";
     }
 }
-
 function mostrarDecoder() {
     if (document.getElementById("contenedor_decorer").style.display == "none") {
         document.getElementById("contenedor_decorer").style.display = "block"
