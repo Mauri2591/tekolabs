@@ -134,6 +134,30 @@ switch ($_GET['case']) {
         echo json_encode($results);
         break;
 
+    case 'get_cantidad_participantes_sorteo_principal':
+        $datos = $pagina->get_cantidad_participantes_sorteo_principal();
+        $valor = array();
+        foreach ($datos as $key => $val) {
+            $valor[] = $val['id'];
+        }
+        $valor_random = $valor[array_rand($valor)];
+        echo $valor_random;
+        break;
+
+    case 'get_cantidad_participantes_sorteo_secundario':
+        $datos = $pagina->get_cantidad_participantes_sorteo_secundario();
+        $valor = array();
+        foreach ($datos as $key => $val) {
+            $valor[] = $val['id'];
+        }
+        $valor_random = $valor[array_rand($valor)];
+        echo $valor_random;
+        break;
+
+    case 'get_nombre_usuario_ganador_sorteo':
+        $dato = $pagina->get_nombre_usuario_ganador_sorteo($_POST['id']);
+        echo json_encode($dato);
+        break;
 
     case 'get_cantidad_version_paginas_eventos':
         $dato = $pagina->get_cantidad_version_paginas_eventos($_POST['id_estado']);
@@ -212,7 +236,7 @@ switch ($_GET['case']) {
     case 'get_nombre_evento_activo':
         $datos = $pagina->get_nombre_evento_activo();
     ?>
-        <span><?php echo $datos->evento ?></span>
+        <span><?php echo isset($datos->evento) ? $datos->evento : "NO DISPONIBLE"  ?></span>
     <?php
         break;
 

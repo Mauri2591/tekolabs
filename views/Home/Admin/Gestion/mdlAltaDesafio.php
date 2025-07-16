@@ -222,7 +222,6 @@
     </div>
 </div>
 
-
 <!-- Modal -->
 <div class="modal fade" id="modalCargarDatosChallenge" tabindex="-1" aria-labelledby="modalAltaChallengeLabel"
     aria-hidden="true">

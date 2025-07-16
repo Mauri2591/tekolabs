@@ -142,6 +142,95 @@ ORDER BY
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function get_cantidad_participantes_sorteo_principal()
+    {
+        $conn = parent::get_conexion();
+        $sql = "SELECT 
+	usuarios_desafios.id,
+    usuarios_desafios.usuario,
+    COUNT(*) AS cantidad_participaciones,
+    SUM(CASE WHEN usuarios_desafios.resolvio = 'si' THEN 1 ELSE 0 END) AS cantidad_resueltos,
+    MAX(usuarios_desafios.fecha_creacion) AS ultima_participacion,
+    CASE 
+        WHEN SUM(CASE WHEN usuarios_desafios.resolvio = 'si' AND niveles.nivel = 'DIFICIL' THEN 1 ELSE 0 END) > 0 
+        THEN 'DIFICIL' 
+        ELSE NULL 
+    END AS nivel
+FROM 
+    usuarios_desafios
+LEFT JOIN 
+    desafios ON usuarios_desafios.id_desafio = desafios.id
+LEFT JOIN 
+    paginas ON desafios.id_pagina = paginas.id
+LEFT JOIN 
+    eventos ON paginas.id_evento = eventos.id
+LEFT JOIN 
+    niveles ON desafios.id_nivel = niveles.id
+WHERE 
+	niveles.nivel = 'DIFICIL'
+    AND eventos.id_estado = 1
+    AND usuarios_desafios.usuario != 'ANONIMUS'
+GROUP BY 
+    usuarios_desafios.usuario
+HAVING 
+    SUM(CASE WHEN usuarios_desafios.resolvio = 'si' THEN 1 ELSE 0 END) > 0
+ORDER BY 
+    cantidad_participaciones DESC;";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
+    public function get_cantidad_participantes_sorteo_secundario()
+    {
+        $conn = parent::get_conexion();
+        $sql = "SELECT 
+	usuarios_desafios.id,
+    usuarios_desafios.usuario,
+    COUNT(*) AS cantidad_participaciones,
+    SUM(CASE WHEN usuarios_desafios.resolvio = 'si' THEN 1 ELSE 0 END) AS cantidad_resueltos,
+    MAX(usuarios_desafios.fecha_creacion) AS ultima_participacion,
+    CASE 
+        WHEN SUM(CASE WHEN usuarios_desafios.resolvio = 'si' AND niveles.nivel = 'DIFICIL' THEN 1 ELSE 0 END) > 0 
+        THEN 'DIFICIL' 
+        ELSE NULL 
+    END AS nivel
+FROM 
+    usuarios_desafios
+LEFT JOIN 
+    desafios ON usuarios_desafios.id_desafio = desafios.id
+LEFT JOIN 
+    paginas ON desafios.id_pagina = paginas.id
+LEFT JOIN 
+    eventos ON paginas.id_evento = eventos.id
+LEFT JOIN 
+    niveles ON desafios.id_nivel = niveles.id
+WHERE 
+    eventos.id_estado = 1
+    AND usuarios_desafios.usuario != 'ANONIMUS'
+GROUP BY 
+    usuarios_desafios.usuario
+HAVING 
+    SUM(CASE WHEN usuarios_desafios.resolvio = 'si' THEN 1 ELSE 0 END) > 0
+ORDER BY 
+    cantidad_participaciones DESC";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
+    public function get_nombre_usuario_ganador_sorteo($id)
+    {
+        $conn = parent::get_conexion();
+        $sql = "SELECT usuario FROM usuarios_desafios WHERE id=:id";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindValue(":id", $id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     public function get_desafios_grafico_gestion()
     {
         $conn = parent::get_conexion();

@@ -1,6 +1,4 @@
-
-
-
+let URL = "http://127.0.0.1/tekoLabs/";
 document.addEventListener("DOMContentLoaded", function () {
     let grafico = null;
 
@@ -55,14 +53,20 @@ document.addEventListener("DOMContentLoaded", function () {
     actualizarGrafico();
 
     // Actualización periódica (cada 15 segundos)
-    setInterval(() => {
-        if ($.fn.DataTable.isDataTable('#table_desafios')) {
-            $('#table_desafios').DataTable().ajax.reload(null, false);
-        }
+    // setInterval(() => {
+    //     if ($.fn.DataTable.isDataTable('#table_desafios')) {
+    //         $('#table_desafios').DataTable().ajax.reload(null, false);
+    //     }
 
-        actualizarGrafico();
+    //     actualizarGrafico();
 
-    }, 20000);
+    // }, 20000);
+
+    if ($.fn.DataTable.isDataTable('#table_desafios')) {
+        $('#table_desafios').DataTable().ajax.reload(null, false);
+    }
+
+    actualizarGrafico();
 
     // Inicializar DataTable
     tabla = $("#table_desafios").DataTable({
@@ -733,4 +737,80 @@ function actualizarChallengeChallenge(id_desafio, id_nivel) {
     );
 }
 
+function sorteo() {
+    $("#modalSorteo").modal("show");
+    $("#valor_hidden_sorteo").val(1)
+    document.getElementById("btnSorteo").style.display = "block";
+    document.getElementById("nombre_jugador_ganador").innerText = "";
+    document.getElementById("nombre_jugador_ganador").style.display = "none";
+    document.getElementById("select_sorteo").value = 1;
+    document.getElementById("primer_premio").style.display = "block";
+    document.getElementById("premio_general").style.display = "none";
+}
 
+function select_sorteo(valor) {
+    if (valor == "2") {
+        document.getElementById("primer_premio").style.display = "none";
+        document.getElementById("premio_general").style.display = "flex";
+        document.getElementById("btnSorteo").style.display = "block";
+        $("#valor_hidden_sorteo").val(valor)
+        document.getElementById("contenedor_mostrar_ganador").style.display = "none";
+        document.getElementById("nombre_jugador_ganador").style.display = "none";
+
+    } else if (valor == "1") {
+        document.getElementById("primer_premio").style.display = "block";
+        document.getElementById("premio_general").style.display = "none";
+        $("#valor_hidden_sorteo").val(valor)
+        document.getElementById("contenedor_mostrar_ganador").style.display = "none";
+        document.getElementById("btnSorteo").style.display = "block";
+        document.getElementById("nombre_jugador_ganador").style.display = "none";
+    }
+}
+
+function btnSorteo() {
+    let VALOR = $("#valor_hidden_sorteo").val();
+    if (VALOR == "1") {
+        $.post("../../../../controllers/ctrPaginas.php?case=get_cantidad_participantes_sorteo_principal",
+            function (data, textStatus, jqXHR) {
+
+                $.post("../../../../controllers/ctrPaginas.php?case=get_nombre_usuario_ganador_sorteo", { id: data },
+                    function (data, textStatus, jqXHR) {
+                        let dato = JSON.parse(data)
+                        $("#valor_hidden_sorteo_usuario_ganador").val(dato.usuario)
+                    },
+                );
+            },
+            "json"
+        );
+    } else if (VALOR == "2") {
+        $.post("../../../../controllers/ctrPaginas.php?case=get_cantidad_participantes_sorteo_secundario",
+            function (data, textStatus, jqXHR) {
+
+                $.post("../../../../controllers/ctrPaginas.php?case=get_nombre_usuario_ganador_sorteo", { id: data },
+                    function (data, textStatus, jqXHR) {
+                        let dato = JSON.parse(data)
+                        $("#valor_hidden_sorteo_usuario_ganador").val(dato.usuario)
+                    },
+                );
+            },
+            "json"
+        );
+    }
+
+    document.getElementById("contenedor_mostrar_ganador").style.display = "block";
+    document.getElementById("btnSorteo").style.display = "none";
+
+    setTimeout(() => {
+        document.getElementById("contenedor_mostrar_ganador").style.display = "none";
+        document.getElementById("text-ganador").style.display = "block";
+
+        setTimeout(() => {
+            document.getElementById("text-ganador").style.display = "none";
+            document.getElementById("nombre_jugador_ganador").style.display = "block";
+
+            let GANADOR = $("#valor_hidden_sorteo_usuario_ganador").val()
+            $("#nombre_jugador_ganador").text(GANADOR)
+        }, 2000);
+    }, 2000);
+
+}
