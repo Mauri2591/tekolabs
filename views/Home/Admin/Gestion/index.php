@@ -10,14 +10,15 @@ if (isset($_SESSION['id'])) {
     <body>
         <div class="row mt-1">
             <div class="col-12 text-center">
-                <span class="badge bg-primary border border-light" style="font-size: 1rem; margin-top: .3rem;">EVENTO
+                <span class="badge bg-success text-light border border-dark"
+                    style="font-size: 1rem; margin-top: .3rem;">EVENTO
                     <span id="nombre_evento"></span> </span>
             </div>
             <div class="col-lg-6" id="cont_tabla_desafios">
 
                 <div class="d-flex justify-content-start">
-                    <button onclick="sorteo()" class="mx-5 mt-2 btn btn-sm"
-                        style="background-color:orangered;color:aliceblue; border:2px solid brown">Sorteo</button>
+                    <button onclick="sorteo()" class="mx-5 mt-2 btn btn-danger btn-sm"><i class="bi bi-stars"></i>
+                        Ir al Sorteo</button>
                 </div>
 
                 <div class="container bg-light mt-5">

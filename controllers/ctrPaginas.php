@@ -19,7 +19,6 @@ switch ($_GET['case']) {
         }
         break;
 
-
     case 'get_datos_combo_generos_evento_pagina_inicio':
         $datos = $pagina->get_datos_combo_generos_evento_pagina_inicio();
         ?>
@@ -36,7 +35,7 @@ switch ($_GET['case']) {
         $idPagina = $_POST['id'];
         $data = $pagina->get_chellenges_pagina($idPagina);
 
-        // NUEVO: verificar si hay desafíos en juego en el evento completo
+        // verificar si hay desafíos en juego en el evento completo
         $hay_jugando = $pagina->hay_desafio_jugando_en_evento($idPagina);
 
         ob_start(); // Capturar HTML
@@ -47,7 +46,7 @@ switch ($_GET['case']) {
         ?>
             <div class="<?php echo $clase ?>">
                 <img src="<?php echo URL ?>/public/eventos/challenges/<?php echo $val['imagen'] ?>" alt="logo del desafío"
-                    width="200" height="100"><br>
+                    width="300" height="125"><br>
 
                 <?php
                 switch ($val['id_estado']) {
@@ -136,22 +135,32 @@ switch ($_GET['case']) {
 
     case 'get_cantidad_participantes_sorteo_principal':
         $datos = $pagina->get_cantidad_participantes_sorteo_principal();
-        $valor = array();
-        foreach ($datos as $key => $val) {
-            $valor[] = $val['id'];
+        if (count($datos) == 0) {
+            echo json_encode(["code" => "400", "Error" => "No hay participantes para el sorteo"]);
+            exit;
+        } else {
+            $valor = array();
+            foreach ($datos as $key => $val) {
+                $valor[] = $val['id'];
+            }
+            $valor_random = $valor[array_rand($valor)];
+            echo $valor_random;
         }
-        $valor_random = $valor[array_rand($valor)];
-        echo $valor_random;
         break;
 
     case 'get_cantidad_participantes_sorteo_secundario':
         $datos = $pagina->get_cantidad_participantes_sorteo_secundario();
-        $valor = array();
-        foreach ($datos as $key => $val) {
-            $valor[] = $val['id'];
+        if (count($datos) == 0) {
+            echo json_encode(["code" => "400", "Error" => "No hay participantes para el sorteo"]);
+            exit;
+        } else {
+            $valor = array();
+            foreach ($datos as $key => $val) {
+                $valor[] = $val['id'];
+            }
+            $valor_random = $valor[array_rand($valor)];
+            echo $valor_random;
         }
-        $valor_random = $valor[array_rand($valor)];
-        echo $valor_random;
         break;
 
     case 'get_nombre_usuario_ganador_sorteo':
@@ -248,9 +257,9 @@ switch ($_GET['case']) {
         $datos = $pagina->get_eventos(); // eventos
         $datos_generos = $pagina->get_combo_categorias(); // generos/categorías
         $data = array();
-        foreach ($datos as $row) {
+        foreach ($datos as $key => $row) {
             $sub_array = array();
-            $sub_array[] = '<span class="badge border border-dark bg-danger text-light">' . $row['id'] . '</span>';
+            $sub_array[] = '<span class="badge border border-dark bg-danger text-light">' . ($key + 1) . '</span>';
             // EVENTO
             $sub_array[] = '<span class="badge bg-warning border border-dark text-dark">' . htmlspecialchars($row['evento']) . '</span>';
             // IMAGEN

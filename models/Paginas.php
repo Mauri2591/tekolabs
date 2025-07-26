@@ -175,7 +175,7 @@ GROUP BY
 HAVING 
     SUM(CASE WHEN usuarios_desafios.resolvio = 'si' THEN 1 ELSE 0 END) > 0
 ORDER BY 
-    cantidad_participaciones DESC;";
+    cantidad_participaciones DESC";
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);

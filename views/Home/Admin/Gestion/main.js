@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         data: {
                             labels: usuarios,
                             datasets: [{
-                                label: 'RESUELTOS',
+                                label: 'VECES JUGADO',
                                 data: total_resueltos,
                                 borderWidth: 2,
                                 borderColor: [
@@ -52,21 +52,13 @@ document.addEventListener("DOMContentLoaded", function () {
     // Carga inicial del gráfico
     actualizarGrafico();
 
-    // Actualización periódica (cada 15 segundos)
-    // setInterval(() => {
-    //     if ($.fn.DataTable.isDataTable('#table_desafios')) {
-    //         $('#table_desafios').DataTable().ajax.reload(null, false);
-    //     }
+    setInterval(() => {
+        if ($.fn.DataTable.isDataTable('#table_desafios')) {
+            $('#table_desafios').DataTable().ajax.reload(null, false);
+        }
+        actualizarGrafico();
 
-    //     actualizarGrafico();
-
-    // }, 20000);
-
-    if ($.fn.DataTable.isDataTable('#table_desafios')) {
-        $('#table_desafios').DataTable().ajax.reload(null, false);
-    }
-
-    actualizarGrafico();
+    }, 30000);
 
     // Inicializar DataTable
     tabla = $("#table_desafios").DataTable({
@@ -746,6 +738,7 @@ function sorteo() {
     document.getElementById("select_sorteo").value = 1;
     document.getElementById("primer_premio").style.display = "block";
     document.getElementById("premio_general").style.display = "none";
+    document.getElementById("text-ganador").style.display = "none";
 }
 
 function select_sorteo(valor) {
@@ -769,34 +762,63 @@ function select_sorteo(valor) {
 
 function btnSorteo() {
     let VALOR = $("#valor_hidden_sorteo").val();
+
     if (VALOR == "1") {
         $.post("../../../../controllers/ctrPaginas.php?case=get_cantidad_participantes_sorteo_principal",
             function (data, textStatus, jqXHR) {
+                if (data.code == 400) {
+                    Swal.fire({
+                        icon: "warning",
+                        title: "Atención!",
+                        text: "No hay participantes para el sorteo",
+                        showConfirmButton: true,
+                        showCancelButton: false
+                    });
+                    $("#modalSorteo").modal("hide");
+                    return;
+                }
 
                 $.post("../../../../controllers/ctrPaginas.php?case=get_nombre_usuario_ganador_sorteo", { id: data },
-                    function (data, textStatus, jqXHR) {
-                        let dato = JSON.parse(data)
-                        $("#valor_hidden_sorteo_usuario_ganador").val(dato.usuario)
-                    },
-                );
+                    function (data2, textStatus, jqXHR) {
+                        let dato = JSON.parse(data2);
+                        $("#valor_hidden_sorteo_usuario_ganador").val(dato.usuario);
+
+                        // MOSTRAR GANADOR
+                        mostrarGanador();
+                    });
             },
             "json"
         );
     } else if (VALOR == "2") {
         $.post("../../../../controllers/ctrPaginas.php?case=get_cantidad_participantes_sorteo_secundario",
             function (data, textStatus, jqXHR) {
+                if (data.code == 400) {
+                    Swal.fire({
+                        icon: "warning",
+                        title: "Atención!",
+                        text: "No hay participantes para el sorteo",
+                        showConfirmButton: true,
+                        showCancelButton: false
+                    });
+                    $("#modalSorteo").modal("hide");
+                    return;
+                }
 
                 $.post("../../../../controllers/ctrPaginas.php?case=get_nombre_usuario_ganador_sorteo", { id: data },
-                    function (data, textStatus, jqXHR) {
-                        let dato = JSON.parse(data)
-                        $("#valor_hidden_sorteo_usuario_ganador").val(dato.usuario)
-                    },
-                );
+                    function (data2, textStatus, jqXHR) {
+                        let dato = JSON.parse(data2);
+                        $("#valor_hidden_sorteo_usuario_ganador").val(dato.usuario);
+
+                        // MOSTRAR GANADOR
+                        mostrarGanador();
+                    });
             },
             "json"
         );
     }
+}
 
+function mostrarGanador() {
     document.getElementById("contenedor_mostrar_ganador").style.display = "block";
     document.getElementById("btnSorteo").style.display = "none";
 
@@ -808,9 +830,8 @@ function btnSorteo() {
             document.getElementById("text-ganador").style.display = "none";
             document.getElementById("nombre_jugador_ganador").style.display = "block";
 
-            let GANADOR = $("#valor_hidden_sorteo_usuario_ganador").val()
-            $("#nombre_jugador_ganador").text(GANADOR)
+            let GANADOR = $("#valor_hidden_sorteo_usuario_ganador").val();
+            $("#nombre_jugador_ganador").text(GANADOR);
         }, 2000);
-    }, 2000);
-
+    }, 5000);
 }
